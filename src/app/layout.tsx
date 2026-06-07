@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 const SITE_URL = "https://osirisai.live";
-const SITE_NAME = "KUZGU";
-const SITE_TITLE = "KUZGU — Open Source Intelligence Platform | Live Flight Tracking, CCTV, OSINT Tools & More";
+const SITE_NAME = "KUZGUN";
+const SITE_TITLE = "KUZGUN — Open Source Intelligence Platform | Live Flight Tracking, CCTV, OSINT Tools & More";
 const SITE_DESCRIPTION = "The open-source Palantir alternative. Track 10,000+ aircraft, 2,000 satellites, and worldwide CCTV cameras in real-time on a 3D globe. Run Nmap scans, DNS lookups, WHOIS queries, SSL cert analysis & threat intelligence — all from your browser. 20+ live data feeds including earthquakes, wildfires, nuclear facilities, cyber threats, and global conflicts. Free & open source.";
 
 export const viewport: Viewport = {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: SITE_TITLE,
-    template: "%s | KUZGU Intelligence",
+    template: "%s | KUZGUN Intelligence",
   },
   description: SITE_DESCRIPTION,
   keywords: [
@@ -53,9 +53,9 @@ export const metadata: Metadata = {
     // Brand
     "osiris", "osirisai", "osirisai.live",
   ],
-  authors: [{ name: "Kuzgu Project", url: SITE_URL }],
-  creator: "Kuzgu Project",
-  publisher: "Kuzgu Project",
+  authors: [{ name: "Kuzgun Project", url: SITE_URL }],
+  creator: "Kuzgun Project",
+  publisher: "Kuzgun Project",
   robots: {
     index: true,
     follow: true,
@@ -168,7 +168,7 @@ const jsonLd = {
   screenshot: `${SITE_URL}/og-image.png`,
   author: {
     "@type": "Organization",
-    name: "Kuzgu Project",
+    name: "Kuzgun Project",
     url: SITE_URL,
   },
 };
@@ -199,7 +199,7 @@ export default function RootLayout({
 
       </head>
       <body className="antialiased">
-        <ErrorBoundary name="KUZGU Core">
+        <ErrorBoundary name="KUZGUN Core">
           {children}
         </ErrorBoundary>
       </body>
