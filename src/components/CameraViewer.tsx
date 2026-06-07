@@ -76,6 +76,7 @@ export default function CameraViewer({ camera, onClose, onLocate }: CameraViewer
     if (camera.feed_url) {
       if (camera.feed_url.startsWith('data:')) {
         setImageUrl(camera.feed_url);
+        setLoading(false); // Data URLs load instantly
       } else {
         const url = camera.feed_url.includes('?') ? `${camera.feed_url}&_t=${Date.now()}` : `${camera.feed_url}?_t=${Date.now()}`;
         setImageUrl(url);
@@ -88,7 +89,7 @@ export default function CameraViewer({ camera, onClose, onLocate }: CameraViewer
 
   // Auto-refresh for JPGs
   useEffect(() => {
-    if (streamType !== 'jpg' || !camera?.feed_url) return;
+    if (streamType !== 'jpg' || !camera?.feed_url || camera.feed_url.startsWith('data:')) return;
     const iv = setInterval(() => setRefreshKey(k => k + 1), 5000); // 5s refresh for JPG
     return () => clearInterval(iv);
   }, [camera?.feed_url, streamType]);
