@@ -33,7 +33,7 @@ export async function fetchIstanbulCameras(): Promise<CctvCamera[]> {
         name: (c.CameraName || `Kamera ${no}`).trim(),
         city: 'İstanbul',
         country: 'Türkiye',
-        feed_url: c.CameraCaptureImage || `https://tkmservices.ibb.gov.tr/web/Handlers/CameraImage.ashx?cno=${no}`,
+        feed_url: `/api/cctv/proxy?url=${encodeURIComponent(c.CameraCaptureImage || `https://tkmservices.ibb.gov.tr/web/Handlers/CameraImage.ashx?cno=${no}`)}`,
         source: 'İBB Trafik',
       });
     }

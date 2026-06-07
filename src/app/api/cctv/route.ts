@@ -6,7 +6,7 @@ import { fetchGreeceCameras } from './greece';
 import { fetchSerbiaCameras } from './serbia';
 import { fetchMacedoniaCameras } from './macedonia';
 import { fetchTurkeyCameras } from './turkey';
-// İBB İstanbul (./istanbul) şimdilik devre dışı — sadece placeholder görsel dönüyor.
+import { fetchIstanbulCameras } from './istanbul';
 import { fetchRomaniaCameras } from './romania';
 import { fetchAustraliaCameras } from './australia';
 import { fetchItalyCameras } from './italy';
@@ -360,8 +360,7 @@ const REGION_FETCHERS: Record<string, () => Promise<any[]>> = {
   'serbia': fetchSerbiaCameras,
   'macedonia': fetchMacedoniaCameras,
   'turkey': fetchTurkeyCameras,
-  // 'istanbul' (İBB) devre dışı — handler app-dışı isteklere gerçek görüntü yerine
-  // sabit "sinyal yok" placeholder döndürüyor. Windy gerçek görüntü sağlıyor.
+  'istanbul': fetchIstanbulCameras,
   'romania': fetchRomaniaCameras,
   'australia': fetchAustraliaCameras,
   'italy': fetchItalyCameras,
@@ -412,7 +411,7 @@ function getRegionsForBounds(lat: number, lng: number, radius: number): string[]
   if (inSerbia) regions.push('serbia');
   if (inMacedonia) regions.push('macedonia');
   if (inRomania) regions.push('romania');
-  if (inTurkey) regions.push('turkey');
+  if (inTurkey) { regions.push('turkey'); regions.push('istanbul'); }
   if (inItaly) regions.push('italy');
   if (inCzechia) regions.push('czechia');
   if (inSlovakia) regions.push('slovakia');
