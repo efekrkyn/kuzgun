@@ -65,18 +65,35 @@ export async function fetchTurkeyCameras(): Promise<CctvCamera[]> {
   // Gerçekçi bir istihbarat ağı görünümü için tüm Türkiye geneline dağıtılmış güvenli/kriptolu kamera ağları.
   const secureFeedSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="400" height="224" viewBox="0 0 400 224">
-  <rect width="400" height="224" fill="#000000"/>
+  <rect width="400" height="224" fill="#050505"/>
   <rect width="400" height="224" fill="none" stroke="#39FF14" stroke-width="2" opacity="0.3"/>
-  <text x="200" y="95" font-family="monospace" font-size="18" font-weight="bold" fill="#39FF14" text-anchor="middle" letter-spacing="3">KGYS SECURE FEED</text>
-  <text x="200" y="125" font-family="monospace" font-size="12" fill="#39FF14" text-anchor="middle" opacity="0.7">STATUS: E2E ENCRYPTED</text>
-  <text x="200" y="155" font-family="monospace" font-size="10" fill="#FF3D3D" text-anchor="middle" letter-spacing="1" opacity="0.9">CLEARANCE: KUZGUN OMNI-LEVEL</text>
-  <circle cx="200" cy="50" r="15" fill="none" stroke="#39FF14" stroke-width="2" opacity="0.5"/>
-  <circle cx="200" cy="50" r="4" fill="#FF3D3D">
-    <animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/>
+  
+  <!-- Grid Background -->
+  <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#39FF14" stroke-width="0.5" opacity="0.1"/>
+  </pattern>
+  <rect width="400" height="224" fill="url(#grid)" />
+
+  <!-- Target Reticle -->
+  <path d="M 200 82 L 200 92 M 200 132 L 200 142 M 170 112 L 180 112 M 220 112 L 230 112" stroke="#39FF14" stroke-width="1.5" opacity="0.6"/>
+  <circle cx="200" cy="112" r="20" fill="none" stroke="#39FF14" stroke-width="1" opacity="0.4"/>
+
+  <!-- Texts -->
+  <text x="200" y="80" font-family="monospace" font-size="14" font-weight="bold" fill="#39FF14" text-anchor="middle" letter-spacing="2">KGYS NODE ACTIVE</text>
+  <text x="200" y="150" font-family="monospace" font-size="10" fill="#39FF14" text-anchor="middle" opacity="0.7">E2E ENCRYPTED VIDEO STREAM</text>
+  <text x="200" y="170" font-family="monospace" font-size="9" fill="#FF3D3D" text-anchor="middle" letter-spacing="1" opacity="0.9">KUZGUN OMNI-CLEARANCE REQUIRED</text>
+  
+  <!-- REC Indicator -->
+  <rect x="15" y="15" width="45" height="18" fill="none" stroke="#FF3D3D" stroke-width="1"/>
+  <text x="38" y="27" font-family="monospace" font-size="10" fill="#FF3D3D" font-weight="bold">REC</text>
+  <circle cx="24" cy="24" r="4" fill="#FF3D3D">
+    <animate attributeName="opacity" values="1;0;1" dur="1.5s" repeatCount="indefinite"/>
   </circle>
-  <line x1="0" y1="0" x2="400" y2="0" stroke="#39FF14" stroke-width="1" opacity="0.4">
-    <animate attributeName="y1" values="0;224" dur="3s" repeatCount="indefinite" />
-    <animate attributeName="y2" values="0;224" dur="3s" repeatCount="indefinite" />
+
+  <!-- Scanning Line -->
+  <line x1="0" y1="0" x2="400" y2="0" stroke="#39FF14" stroke-width="2" opacity="0.5">
+    <animate attributeName="y1" values="0;224;0" dur="4s" repeatCount="indefinite" />
+    <animate attributeName="y2" values="0;224;0" dur="4s" repeatCount="indefinite" />
   </line>
 </svg>`.trim();
   const feedDataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(secureFeedSvg);
