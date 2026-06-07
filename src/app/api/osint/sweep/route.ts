@@ -48,12 +48,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Invalid IPv4 address format' }, { status: 400 });
   }
 
-  if (isPrivateOrReserved(octets)) {
-    return NextResponse.json(
-      { error: 'Private and reserved IP ranges are not allowed' },
-      { status: 400 },
-    );
-  }
+  const isPrivate = isPrivateOrReserved(octets);
 
   const cidrParam = searchParams.get('cidr');
   let cidr = 24;
@@ -79,38 +74,55 @@ export async function GET(req: Request) {
   }
 
   try {
-    // --- 3. Geolocation ---
-    const geoRes = await fetch(
-      `http://ip-api.com/json/${ip}?fields=status,message,country,countryCode,region,regionName,city,lat,lon,isp,org,as,proxy,hosting`,
-      { signal: AbortSignal.timeout(5000) },
-    );
+    let center;
 
-    if (!geoRes.ok) {
-      return NextResponse.json(
-        { error: 'Geolocation service unavailable' },
-        { status: 502 },
+    if (isPrivate) {
+      // Mock coordinates for local network scans
+      center = {
+        lat: 39.92077, // Default map center (Ankara) or could be 0,0
+        lng: 32.85411,
+        city: 'Local Network',
+        region: 'LAN',
+        country: 'Internal',
+        countryCode: 'TR',
+        isp: 'Private Network',
+        asn: '',
+        org: 'Local Subnet',
+      };
+    } else {
+      // --- 3. Geolocation ---
+      const geoRes = await fetch(
+        `http://ip-api.com/json/${ip}?fields=status,message,country,countryCode,region,regionName,city,lat,lon,isp,org,as,proxy,hosting`,
+        { signal: AbortSignal.timeout(5000) },
       );
-    }
 
-    const geoData = await geoRes.json();
-    if (geoData.status === 'fail') {
-      return NextResponse.json(
-        { error: `Geolocation failed: ${geoData.message || 'Unknown error'}` },
-        { status: 422 },
-      );
-    }
+      if (!geoRes.ok) {
+        return NextResponse.json(
+          { error: 'Geolocation service unavailable' },
+          { status: 502 },
+        );
+      }
 
-    const center = {
-      lat: geoData.lat as number,
-      lng: geoData.lon as number,
-      city: geoData.city as string,
-      region: geoData.regionName as string,
-      country: geoData.country as string,
-      countryCode: geoData.countryCode as string,
-      isp: geoData.isp as string,
-      asn: (geoData.as as string) || '',
-      org: (geoData.org as string) || '',
-    };
+      const geoData = await geoRes.json();
+      if (geoData.status === 'fail') {
+        return NextResponse.json(
+          { error: `Geolocation failed: ${geoData.message || 'Unknown error'}` },
+          { status: 422 },
+        );
+      }
+
+      center = {
+        lat: geoData.lat as number,
+        lng: geoData.lon as number,
+        city: geoData.city as string,
+        region: geoData.regionName as string,
+        country: geoData.country as string,
+        countryCode: geoData.countryCode as string,
+        isp: geoData.isp as string,
+        asn: (geoData.as as string) || '',
+        org: (geoData.org as string) || '',
+      };
+    }
 
     return NextResponse.json({
       center,
