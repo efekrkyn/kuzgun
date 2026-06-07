@@ -636,9 +636,9 @@ export default function Dashboard() {
               />
             </div>
 
-            {/* ── KUZGU title — letter-by-letter stagger ── */}
+            {/* ── KUZGUN title — letter-by-letter stagger ── */}
             <div className="flex items-center gap-[2px] mb-3 z-[2]">
-              {'KUZGU'.split('').map((letter, i) => (
+              {'KUZGUN'.split('').map((letter, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
@@ -796,13 +796,16 @@ export default function Dashboard() {
 
       {/* ── HEADER ── */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 2.5 }} className={`absolute top-4 left-6 z-[200] pointer-events-none flex flex-col`}>
-        <div className="flex items-baseline gap-2">
-          <h1 className="text-xl font-bold tracking-[0.4em] text-[var(--gold-primary)] font-mono">KUZGU</h1>
-          <span className="text-[10px] text-[var(--text-muted)] font-mono tracking-[0.15em] opacity-80">KÜRESEL İSTİHBARAT KOMUTA</span>
+        <div className="flex items-center gap-3">
+          <img src="/kuzgun-logo.png" alt="KUZGUN Logo" className="w-10 h-10 rounded-full border border-[var(--cyan-primary)]" style={{ boxShadow: '0 0 15px var(--cyan-primary)' }} />
+          <div className="flex items-baseline gap-2">
+            <h1 className="text-xl font-bold tracking-[0.4em] text-[var(--cyan-primary)] font-mono">KUZGUN</h1>
+            <span className="text-[10px] text-[var(--text-muted)] font-mono tracking-[0.15em] opacity-80">KÜRESEL İSTİHBARAT KOMUTA</span>
+          </div>
         </div>
-        <div className="flex items-center gap-4 mt-1">
-          <span className="text-[5px] text-[var(--text-muted)] font-mono tracking-[0.3em] uppercase opacity-40">
-            POWERED BY KUZGU OPEN SOURCE INTELLIGENCE · C2 ENGINE: PHYSICAL COMMAND CORE · SENSORS: ORBITAL LATTICE · NET: LYCAN NETWORK
+        <div className="flex items-center gap-4 mt-1 ml-13">
+          <span className="text-[5px] text-[var(--text-muted)] font-mono tracking-[0.3em] uppercase opacity-40 ml-12">
+            POWERED BY KUZGUN OPEN SOURCE INTELLIGENCE · C2 ENGINE: PHYSICAL COMMAND CORE · SENSORS: ORBITAL LATTICE · NET: LYCAN NETWORK
           </span>
         </div>
       </motion.div>
