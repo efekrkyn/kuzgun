@@ -1194,8 +1194,17 @@ function OsirisMap({ data, activeLayers, onEntityClick, onMouseCoords, onRightCl
 
   useEffect(() => {
     if (!mapReady) return;
-    setGeo('satellites', activeLayers.satellites && data.satellites ? data.satellites.map((s: any) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [s.lng, s.lat] }, properties: { name: s.name, color: s.color, mission: s.mission, alt: s.alt, noradId: s.noradId } })) : []);
-  }, [mapReady, data.satellites, activeLayers.satellites, setGeo]);
+    let sats = [];
+    if (data.satellites) {
+      sats = data.satellites.filter((s: any) => {
+        const isSpy = s.mission === 'Military Recon' || s.mission === 'SIGINT' || s.mission === 'NRO Classified';
+        if (isSpy && activeLayers.spy_satellites) return true;
+        if (!isSpy && activeLayers.satellites) return true;
+        return false;
+      }).map((s: any) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [s.lng, s.lat] }, properties: { name: s.name, color: s.color, mission: s.mission, alt: s.alt, noradId: s.noradId } }));
+    }
+    setGeo('satellites', sats);
+  }, [mapReady, data.satellites, activeLayers.satellites, activeLayers.spy_satellites, setGeo]);
 
   useEffect(() => {
     if (!mapReady) return;
@@ -1428,7 +1437,7 @@ function OsirisMap({ data, activeLayers, onEntityClick, onMouseCoords, onRightCl
   useEffect(() => {
     if (!mapReady) return;
     setVis(['eq-circles','eq-label'], activeLayers.earthquakes);
-    setVis(['sat-dots'], activeLayers.satellites);
+    setVis(['sat-dots'], activeLayers.satellites || activeLayers.spy_satellites);
     setVis(['gdelt-dots'], activeLayers.global_incidents);
     setVis(['ioda-glow','ioda-dots','ioda-label'], activeLayers.internet_outages);
     setVis(['malware-glow','malware-dots','malware-label'], activeLayers.malware);

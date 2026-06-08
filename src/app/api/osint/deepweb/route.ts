@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { isRateLimited, getClientIp } from '@/lib/ssrf-guard';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export const dynamic = 'force-dynamic';
 
@@ -75,11 +76,29 @@ export async function GET(req: Request) {
 
     totalRiskScore = Math.min(totalRiskScore, 100);
 
+    let aiBrief = null;
+    try {
+      const apiKey = process.env.GEMINI_API_KEY_1 || process.env.GEMINI_API_KEY_2;
+      if (apiKey) {
+        const client = new GoogleGenerativeAI(apiKey);
+        const model = client.getGenerativeModel({
+          model: 'gemini-2.0-flash',
+          systemInstruction: 'You are Robin, an elite Dark Web AI intelligence analyst. Analyze the provided dark web / deep web findings for the target and write a very brief (max 3 sentences) tactical assessment.'
+        });
+        const prompt = `TARGET: ${target}\nRISK SCORE: ${totalRiskScore}\nFINDINGS: ${JSON.stringify(findings).substring(0, 2000)}\n\nProvide the Robin Tactical Assessment.`;
+        const aiResult = await model.generateContent(prompt);
+        aiBrief = aiResult.response.text();
+      }
+    } catch (e) {
+      console.error('Robin AI Error:', e);
+    }
+
     return NextResponse.json({
       target,
       riskScore: totalRiskScore,
       riskLevel: totalRiskScore > 70 ? 'CRITICAL' : totalRiskScore > 30 ? 'HIGH' : totalRiskScore > 0 ? 'MEDIUM' : 'LOW',
-      findings
+      findings,
+      aiBrief
     });
   } catch (error: any) {
     return NextResponse.json({ error: 'Deep Web taraması başarısız oldu.', detail: error.message }, { status: 502 });

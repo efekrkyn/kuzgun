@@ -8,7 +8,7 @@ import {
   ChevronDown, ChevronUp, Loader2, AlertTriangle, Server,
   Wifi, Lock, MapPin, Bug, Code, Layers, Network, Fingerprint,
   CheckCircle, XCircle, Clock, ExternalLink, Crosshair,
-  Maximize2, Minimize2, Gavel, Bitcoin, Phone, Terminal, ShieldAlert, UserSearch, ShieldCheck, Mail, AtSign, BadgeCheck, Heart, Repeat2, Camera, Aperture, ScanFace
+  Maximize2, Minimize2, Gavel, Bitcoin, Phone, Terminal, ShieldAlert, UserSearch, ShieldCheck, Mail, AtSign, BadgeCheck, Heart, Repeat2, Camera, Aperture, ScanFace, Link, Copy
 } from 'lucide-react';
 import { ipToNumber, numberToIp, calculateSubnetStart, classifyDevice, assessRisk, batchFetch, ShodanInternetDBResponse, SweepDevice } from '@/lib/osint-utils';
 
@@ -39,8 +39,8 @@ const TABS = [
   { id: 'phone', label: 'TELEFON', icon: Phone, placeholder: 'Telefon no (örn. +90...)', color: '#FF9500' },
   { id: 'leaks', label: 'VERİ SIZINTISI', icon: ShieldAlert, placeholder: 'Email adresi', color: '#E040FB' },
   { id: 'github', label: 'GITHUB', icon: Terminal, placeholder: 'GitHub kullanıcı adı', color: '#87CEEB' },
-  { id: 'username', label: 'KULLANICI ADI', icon: UserSearch, placeholder: '1400+ sitede aranacak kullanıcı adı', color: '#00E676' },
-  { id: 'email', label: 'EMAIL HESAPLARI', icon: Mail, placeholder: 'Kayıtlı hesap için email', color: '#448AFF' },
+  { id: 'username', label: 'KULLANICI ADI', icon: UserSearch, placeholder: '205+ Vektörde Kullanıcı Taraması', color: '#00E676' },
+  { id: 'email', label: 'EMAIL HESAPLARI', icon: Mail, placeholder: '100+ Vektörde Email OSINT Taraması', color: '#448AFF' },
   { id: 'sweep', label: 'IP TARAMA', icon: Crosshair, placeholder: 'IP adresi girin (örn. 8.8.8.8)', color: '#FF3D3D' },
   { id: 'honeypot', label: 'HEDEF TAKİBİ', icon: Crosshair, placeholder: 'Kampanya Adı (örn: Sosyal Müh. Testi)', color: '#FF0033' },
   { id: 'typosquat', label: 'OLTALAMA (TYPOSQUAT)', icon: AlertTriangle, placeholder: 'Şirket alan adı (örn. google.com)', color: '#FF3D3D' },
@@ -84,14 +84,14 @@ const TAB_DESCRIPTIONS: Record<string, string> = {
   'phone': 'Telefon numarasının kayıtlı olduğu ülke, operatör ve taşıyıcıyı bulur.',
   'leaks': 'Verilen e-postanın hangi veri sızıntılarında (Breach) ifşa olduğunu sorgular.',
   'github': 'GitHub kullanıcısının profili, açık depoları ve sızan kodlarını analiz eder.',
-  'username': 'Bir kullanıcı adının dünya çapındaki 1400\'den fazla platformda (Forum, Sosyal Medya) kayıtlı olup olmadığını arar.',
-  'email': 'E-postanın geçmişteki şifre sızıntıları ve Pastebin dökümlerindeki izini sürer.',
+  'username': 'Bir kullanıcı adını 205+ platformda (user-scanner core) eşzamanlı arayarak dijital izini ve üyeliklerini tespit eder.',
+  'email': 'Verilen e-posta adresini 100+ farklı serviste (user-scanner core) arka planda sorgulayarak aktif olduğu yerleri listeler.',
   'sweep': 'Ağ üzerindeki aktif IP adreslerini hızlı ping sweep ile haritalandırır.',
   'honeypot': 'Hedef takip ve tuzak (Honeypot) kampanyaları için log ve veri yönetimi.',
   'typosquat': 'Hedef kurum için alınan benzer (Oltalama / Phishing) sahte alan adlarını bulur.',
   'recon': 'Hedefi 4 koldan (Subdomain, SSL, Teknoloji, WAF) tarar ve ekran görüntüsünü alarak tam rapor sunar.',
   'git-secrets': 'Hedefin açık kaynak (GitHub) kodlarındaki unutulmuş şifre (Secret, API Key) sızıntılarını tespit eder.',
-  'deepweb': 'Hedefi Karanlık Ağ (.onion siteleri), XposedOrNot veritabanı ve GitHub sızıntılarında eşzamanlı tarayan metarama motoru.',
+  'deepweb': 'Deep web, Dark Web (.onion) ağlarında hedefinizi arar ve veri sızıntılarını Robin AI (Yapay Zeka) analizi ile tespit eder.',
   'threatintel': 'IP adresinin global tehdit istihbaratı ağlarında (Botnet, C2, Malware) işaretlenip işaretlenmediğini denetler.',
   'dorking': 'Hedef için otomatik "Google Hacking (GHDB)" dorkları üreterek gizli şifre, veritabanı ve kameralara erişim yollarını açar.',
   'paramspider': 'Hedefe hiç dokunmadan Web Arşivlerini tarayarak zafiyetli (SQLi, XSS) olabilecek URL parametrelerini (?id=1) pasif olarak çıkarır.',
@@ -1017,6 +1017,18 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
             <ResultRow label="Tehlike Seviyesi" value={r.riskLevel || 'LOW'} />
             <div className="text-[9px] font-mono text-[var(--text-muted)] mt-2">KUZGU sizin için Ahmia ağından indeksli .onion sitelerini, XposedOrNot veritabanlarını ve Github sızıntılarını eşzamanlı tarar.</div>
           </div>
+          
+          {r.aiBrief && (
+            <div className="bg-[#8A2BE2]/10 p-3 rounded border border-[#8A2BE2]/40 mt-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Radar className="w-4 h-4 text-[#8A2BE2]" />
+                <span className="text-[12px] font-bold text-[#8A2BE2]">ROBIN AI TACTICAL ASSESSMENT</span>
+              </div>
+              <div className="text-[11px] font-mono text-white/90 leading-relaxed">
+                {r.aiBrief}
+              </div>
+            </div>
+          )}
 
           {ahmia.length > 0 && (
             <div>

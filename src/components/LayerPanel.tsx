@@ -32,7 +32,7 @@ const LAYER_GROUPS = [
     layers: [
       { key: 'flights', label: 'Ticari', icon: Plane, color: '#00E5FF', dataKey: 'commercial_flights' },
       { key: 'private', label: 'Özel', icon: Plane, color: '#00E676', dataKey: 'private_flights' },
-      { key: 'jets', label: 'Özel Jetler', icon: Plane, color: '#FF69B4', dataKey: 'private_jets' },
+      { key: 'jets', label: 'VIP / Özel Jetler', icon: Plane, color: '#FF69B4', dataKey: 'private_jets' },
       { key: 'military', label: 'Askeri', icon: Shield, color: '#FF3D3D', dataKey: 'military_flights' },
     ],
   },
@@ -44,6 +44,7 @@ const LAYER_GROUPS = [
       { key: 'maritime', label: 'Denizcilik / Donanma', icon: Ship, color: '#00BCD4', dataKey: 'maritime_ships,maritime_ports,maritime_chokepoints' },
       { key: 'cables', label: 'Denizaltı Kabloları', icon: Share2, color: '#4FC3F7', dataKey: 'submarine_cables' },
       { key: 'satellites', label: 'Uydular', icon: Satellite, color: '#D4AF37', dataKey: 'satellites' },
+      { key: 'spy_satellites', label: 'Casus Uydular', icon: Satellite, color: '#FF0033', dataKey: 'spy_satellites' },
     ],
   },
   {
