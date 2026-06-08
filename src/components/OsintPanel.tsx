@@ -54,6 +54,8 @@ const TABS = [
   { id: 'telegram', label: 'TELEGRAM OSINT', icon: UserSearch, placeholder: 'Kullanıcı adı veya t.me linki', color: '#0088CC' },
   { id: 'phishing', label: 'OLTALAMA AVCISI', icon: ShieldAlert, placeholder: 'Marka adı (örn. paypal)', color: '#FF0033' },
   { id: 'agent', label: 'OTONOM AJAN', icon: Terminal, placeholder: 'Hedef alan adı (örn. tesla.com)', color: '#00FF00' },
+  { id: 'nsi', label: 'NSI CORPORATE INTEL', icon: BadgeCheck, placeholder: 'Kurum/Marka Adı (örn. Starbucks)', color: '#FFD700' },
+  { id: 'last30days', label: 'LAST 30 DAYS SCAN', icon: Radar, placeholder: 'Kişi/Kurum/Olay Adı', color: '#FF0033' },
 ];
 
 const TAB_DESCRIPTIONS: Record<string, string> = {
@@ -93,10 +95,12 @@ const TAB_DESCRIPTIONS: Record<string, string> = {
   'threatintel': 'IP adresinin global tehdit istihbaratı ağlarında (Botnet, C2, Malware) işaretlenip işaretlenmediğini denetler.',
   'dorking': 'Hedef için otomatik "Google Hacking (GHDB)" dorkları üreterek gizli şifre, veritabanı ve kameralara erişim yollarını açar.',
   'paramspider': 'Hedefe hiç dokunmadan Web Arşivlerini tarayarak zafiyetli (SQLi, XSS) olabilecek URL parametrelerini (?id=1) pasif olarak çıkarır.',
-  'library': 'FBI-tools ve hacking-resources ilhamlı, siber güvenlik komutlarını ve taktiklerini barındıran devasa kopya kağıdı kütüphanesi.',
-  'telegram': 'Telegram platformunda hedef kanalın istatistiklerini, eski bağlantılarını ve meta verilerini pasif olarak çeker.',
-  'phishing': 'Certificate Transparency (CT) loglarını (crt.sh) tarayarak markanızı taklit eden yeni sahte sertifikalı siteleri avlar.',
-  'agent': 'Redamon ilhamlı; yapay zeka destekli otonom keşif ajanı. Alt alan adlarından WAF tespitine kadar zincirleme test yapıp özet rapor sunar.'
+  'library': 'Yaygın olarak kullanılan sızma testi araçları (Nmap, SQLMap, vb.) için hızlı referans ve kopya kağıtları.',
+  'telegram': 'Verilen kullanıcı adını veya bağlantıyı kullanarak Telegram üzerindeki profil, grup veya kanal bilgilerini toplar.',
+  'phishing': 'Sertifika şeffaflık loglarını ve yeni kaydedilen alan adlarını tarayarak hedef markaya yönelik olası oltalama saldırılarını (phishing) tespit eder.',
+  'agent': 'Kapsamlı bir otonom keşif başlatır. Hedefi derinlemesine analiz eder ve birleştirilmiş rapor sunar.',
+  'nsi': 'NSI ve Wikidata altyapısını kullanarak hedef markanın/şirketin resmi logosunu, sosyal medya (Twitter, Facebook, vb.) ve dijital ayak izini çıkarır.',
+  'last30days': 'Hedef hakkında son 30 gün içinde Reddit, Hacker News ve GitHub gibi platformlarda insanların gerçekte ne konuştuğunu yapay zeka ile sentezleyip özetler.'
 };
 
 interface OsintPanelProps { isOpen?: boolean; onClose?: () => void; isMobile?: boolean; onSweepVisualize?: (data: any) => void; onScanGeolocate?: (target: string, data: any) => void; onGraphPivot?: (type: string, id: string, label?: string) => void; }
@@ -392,9 +396,9 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
         case 'paramspider': url = `/api/osint/paramspider?target=${encodeURIComponent(query)}`; break;
         case 'telegram': url = `/api/osint/telegram?target=${encodeURIComponent(query)}`; break;
         case 'phishing': url = `/api/osint/phishing?target=${encodeURIComponent(query)}`; break;
-        case 'agent': 
-          // Agent logic is complex and multi-step. Handled specially below or by state.
-          // For now, trigger the first step: Recon subdomains. We'll handle the rest in useEffect.
+        case 'nsi': url = `/api/osint/nsi?q=${encodeURIComponent(query)}`; break;
+        case 'last30days': url = `/api/osint/last30days?q=${encodeURIComponent(query)}`; break;
+        case 'agent':
           setResults({ target: query, agentState: 'Subdomain keşfi başlatılıyor...', timestamp: Date.now() });
           setLoading(false);
           return;
@@ -782,6 +786,76 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
     }
 
     // ── TELEGRAM SOCMINT ──
+    if (activeTab === 'nsi') {
+      return (
+        <div className="space-y-4">
+          <SectionHeader title="NSI CORPORATE INTEL" icon={BadgeCheck} color="#FFD700" />
+          <div className="bg-[#FFD700]/5 p-3 rounded border border-[#FFD700]/20 flex flex-col sm:flex-row gap-4 items-start">
+            {r.logo && (
+              <div className="shrink-0 p-2 bg-white rounded-xl shadow-lg border-2 border-[#FFD700]/30 max-w-[120px]">
+                <img src={r.logo} alt={r.name} className="w-full object-contain max-h-[80px]" />
+              </div>
+            )}
+            <div className="flex-1 space-y-2">
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="text-[16px] font-bold text-white/90">{r.name}</div>
+                  <div className="text-[10px] font-mono text-white/60 uppercase">{r.description || 'Kurum / Organizasyon'}</div>
+                </div>
+                <div className="text-[9px] font-mono text-[#FFD700] border border-[#FFD700]/30 px-2 py-0.5 rounded">
+                  Q-ID: {r.id}
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 pt-2">
+                {r.website && (
+                  <a href={r.website} target="_blank" className="flex items-center gap-1.5 text-[10px] font-mono text-[#FFD700] hover:text-[#FFD700] bg-[#FFD700]/10 px-2 py-1 rounded">
+                    <Globe className="w-3 h-3" /> {r.website.replace(/^https?:\/\/(www\.)?/, '')}
+                  </a>
+                )}
+                {r.social?.twitter && (
+                  <a href={r.social.twitter} target="_blank" className="flex items-center gap-1.5 text-[10px] font-mono text-[#1DA1F2] hover:bg-[#1DA1F2]/10 border border-[#1DA1F2]/30 px-2 py-1 rounded">
+                    <AtSign className="w-3 h-3" /> Twitter
+                  </a>
+                )}
+                {r.social?.facebook && (
+                  <a href={r.social.facebook} target="_blank" className="flex items-center gap-1.5 text-[10px] font-mono text-[#1877F2] hover:bg-[#1877F2]/10 border border-[#1877F2]/30 px-2 py-1 rounded">
+                    <Globe className="w-3 h-3" /> Facebook
+                  </a>
+                )}
+                {r.social?.instagram && (
+                  <a href={r.social.instagram} target="_blank" className="flex items-center gap-1.5 text-[10px] font-mono text-[#E1306C] hover:bg-[#E1306C]/10 border border-[#E1306C]/30 px-2 py-1 rounded">
+                    <Camera className="w-3 h-3" /> Instagram
+                  </a>
+                )}
+                {r.social?.linkedin && (
+                  <a href={r.social.linkedin} target="_blank" className="flex items-center gap-1.5 text-[10px] font-mono text-[#0077B5] hover:bg-[#0077B5]/10 border border-[#0077B5]/30 px-2 py-1 rounded">
+                    <UserSearch className="w-3 h-3" /> LinkedIn
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === 'last30days') {
+      return (
+        <div className="space-y-4">
+          <SectionHeader title="LAST 30 DAYS PULSE" icon={Radar} color="#FF0033" />
+          <div className="bg-[#FF0033]/5 p-3 rounded border border-[#FF0033]/20">
+            <div className="text-[12px] font-mono text-[#FF0033] mb-3 border-b border-[#FF0033]/20 pb-2 flex justify-between items-end">
+              <span>HEDEF: {r.target}</span>
+              <span className="text-[9px] text-white/50">Kaynaklar: HN ({r.raw_data?.hn || 0}), GH ({r.raw_data?.github || 0})</span>
+            </div>
+            <div className="text-[10px] text-white/80 whitespace-pre-wrap leading-relaxed font-mono">
+              {r.brief}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     if (activeTab === 'telegram') {
       const wallets = r.extracted_wallets || [];
       const links = r.extracted_links || [];
