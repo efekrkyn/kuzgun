@@ -994,6 +994,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
               <div className="text-[11px] text-[#00FF00]">
                 KUZGUN OSINT-REPL v2.0 <br/>
                 KUZGUN AI Ajanı dinliyor. Taramak istediğiniz hedefi veya çalıştırmak istediğiniz aracı yazın...
+                <br/><span className="text-[#00E5FF] text-[10px] mt-2 block">[MEMORY-OS] 7-Layer persistent memory initialized. Previous target context loaded.</span>
               </div>
               {replHistory.map((log: any, i: number) => (
                 <div key={i} className="text-[11px] text-[#00FF00]/80">
@@ -2369,6 +2370,29 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
 
   const renderContent = () => (
     <div className="flex flex-col gap-2.5">
+      {/* AiSOC Dashboard Header */}
+      <div className="flex items-center justify-between bg-black/60 border border-red-500/50 rounded-lg p-3 relative overflow-hidden shadow-[0_0_15px_rgba(255,0,0,0.15)]">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-transparent to-blue-500/10 pointer-events-none" />
+        <div className="flex items-center gap-3 relative z-10">
+          <ShieldAlert className="w-6 h-6 text-red-500 animate-pulse" />
+          <div>
+            <div className="text-[14px] font-bold text-red-500 font-mono tracking-widest">AiSOC OPERATIONS CENTER</div>
+            <div className="text-[9px] text-white/70 font-mono">PURPLE-TEAM ACTIVE · MITRE ATT&CK READY</div>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 relative z-10 hidden sm:flex">
+          <div className="flex flex-col items-end">
+            <span className="text-[8px] text-red-400 font-mono">THREAT LEVEL</span>
+            <span className="text-[12px] font-bold text-red-500 font-mono">ELEVATED</span>
+          </div>
+          <div className="w-px h-6 bg-white/20" />
+          <div className="flex flex-col items-end">
+            <span className="text-[8px] text-[#00E5FF] font-mono">AGENT STATUS</span>
+            <span className="text-[12px] font-bold text-[#00E5FF] font-mono">ONLINE</span>
+          </div>
+        </div>
+      </div>
+
       {/* Tool Grid */}
       <div className="flex flex-col gap-1">
         {/* Sweep - Main Action */}
@@ -2691,7 +2715,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
             <span className="text-[#00FF00] font-bold text-[12px] tracking-widest">AGENT BOOT SEQUENCE INITIATED</span>
           </div>
           <div className="text-[10px] text-white/80 animate-pulse">[AGENT GOVERNANCE] Verifying Zero-Trust identity protocols...</div>
-          <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '0.5s' }}>[MICROSANDBOX] Spawning isolated local-first microVM...</div>
+          <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '0.5s' }}>[FORKD] Spawning 100-node microVM swarm via Snapshot CoW in 120ms...</div>
           <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1s' }}>[OWASP] Enforcing agentic boundaries & compliance...</div>
           <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1.5s' }}>[CORE] Connecting neural pathways to Anthropic Cyber Skills...</div>
           
