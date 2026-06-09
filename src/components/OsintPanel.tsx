@@ -1212,6 +1212,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
       const sec: any = r.httpSecurity || {};
       const hsts: any = r.hsts || {};
       const fw: any = r.firewall || {};
+      const ai: any = r.aiProtection || {};
       const stxt: any = r.securityTxt || {};
       const arc: any = r.archives || {};
       const rk: any = r.rank || {};
@@ -1225,6 +1226,16 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
           <ResultRow label="Host" value={r.hostname || query} color="#00E676" />
           {rk?.ranks?.length ? <ResultRow label="Tranco Sırası" value={`#${rk.ranks[0].rank}`} color="#FFD700" /> : null}
           {fw?.hasWaf ? <ResultRow label="WAF / CDN" value={fw.waf} color="#00E5FF" /> : (fw?.error ? null : <ResultRow label="WAF / CDN" value="none detected" />)}
+          
+          {ai?.protected && (
+            <div className="bg-[#8A2BE2]/10 border border-[#8A2BE2]/40 rounded-lg p-2 flex items-center gap-2 mt-2">
+              <Radar className="w-4 h-4 text-[#8A2BE2] animate-pulse" />
+              <div>
+                <div className="text-[10px] font-bold text-[#8A2BE2] font-mono tracking-widest">YAPAY ZEKA KALKANI TESPİT EDİLDİ (ANUBIS)</div>
+                <div className="text-[9px] text-[#8A2BE2]/80 font-mono">Mekanizma: {ai.mechanism}</div>
+              </div>
+            </div>
+          )}
 
           {/* Email security posture */}
           <SectionHeader title="EMAIL GÜVENLİĞİ" icon={Mail} color="#448AFF" />
@@ -2579,6 +2590,20 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
           <div className="px-3 py-2 border-t border-[#2A2A28]">
             <div className="text-[8px] font-mono text-[#5C5A54] tracking-wider">SWEPT {sweepResult.summary.total_hosts} HOSTS IN {(sweepResult.sweep_time_ms / 1000).toFixed(1)}s · ASN {sweepResult.center.asn}</div>
           </div>
+        </div>
+      )}
+
+      {loading && activeTab === 'agent' && (
+        <div className="bg-[#00FF00]/10 border border-[#00FF00]/40 rounded-lg p-4 font-mono space-y-2 mt-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Terminal className="w-4 h-4 text-[#00FF00] animate-pulse" />
+            <span className="text-[#00FF00] font-bold text-[12px] tracking-widest">AGENT BOOT SEQUENCE INITIATED</span>
+          </div>
+          <div className="text-[10px] text-white/80 animate-pulse">[AGENT GOVERNANCE] Verifying Zero-Trust identity protocols...</div>
+          <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '0.5s' }}>[MICROSANDBOX] Spawning isolated local-first microVM...</div>
+          <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1s' }}>[OWASP] Enforcing agentic boundaries & compliance...</div>
+          <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1.5s' }}>[CORE] Connecting neural pathways to Anthropic Cyber Skills...</div>
+          <div className="text-[10px] text-[#00FF00] mt-2">Engaging target: {query}</div>
         </div>
       )}
 

@@ -41,6 +41,7 @@ export interface WebCheckReport {
   httpSecurity: unknown;
   hsts: unknown;
   firewall: unknown;
+  aiProtection?: unknown;
   cookies: unknown;
   securityTxt: unknown;
   redirects: unknown;
@@ -180,6 +181,19 @@ function detectWaf(h: Headers) {
   return hit ? { hasWaf: true, waf: hit[1] } : { hasWaf: false };
 }
 
+function detectAiProtection(h: Headers, waf: any) {
+  const robotsTag = (h.get('x-robots-tag') || '').toLowerCase();
+  const hasNoAi = robotsTag.includes('noai') || robotsTag.includes('noimageai');
+  const server = (h.get('server') || '').toLowerCase();
+  
+  if (hasNoAi) return { protected: true, mechanism: 'X-Robots-Tag (NoAI)' };
+  if (server.includes('anubis')) return { protected: true, mechanism: 'Anubis AI Shield' };
+  if (waf.hasWaf && waf.waf === 'Cloudflare') return { protected: true, mechanism: 'Cloudflare Bot Management (AI Crawler Reject)' };
+  if (waf.hasWaf && waf.waf === 'Akamai') return { protected: true, mechanism: 'Akamai Bot Manager' };
+  
+  return { protected: false };
+}
+
 async function liveHeaderChecks(url: string) {
   try {
     const check = await validateHost(new URL(url).hostname);
@@ -194,15 +208,18 @@ async function liveHeaderChecks(url: string) {
       Object.entries(SEC_HEADERS).map(([k, key]) => [key, !!h.get(k)]),
     );
     const setCookie = h.get('set-cookie');
+    const firewall = detectWaf(h);
+    const aiProtection = detectAiProtection(h, firewall);
     return {
       httpSecurity: { status: res.status, ...httpSecurity },
       hsts: evalHsts(h.get('strict-transport-security')),
-      firewall: detectWaf(h),
+      firewall,
+      aiProtection,
       cookies: setCookie ? { present: true, raw: setCookie } : { present: false },
     };
   } catch (e) {
     const err = { error: (e as Error).message };
-    return { httpSecurity: err, hsts: err, firewall: err, cookies: err };
+    return { httpSecurity: err, hsts: err, firewall: err, aiProtection: err, cookies: err };
   }
 }
 
@@ -342,6 +359,7 @@ export async function runWebCheck(target: string): Promise<WebCheckReport> {
     httpSecurity: liveR.httpSecurity,
     hsts: liveR.hsts,
     firewall: liveR.firewall,
+    aiProtection: liveR.aiProtection,
     cookies: liveR.cookies,
     securityTxt: securityTxtR,
     redirects: redirectsR,
