@@ -59,6 +59,7 @@ const TABS = [
   { id: 'news', label: 'HABER İSTİHBARATI', icon: Globe, placeholder: 'Şirket, olay veya kişi (örn. NVIDIA)', color: '#E040FB' },
   { id: 'repl', label: 'AI TERMINAL (REPL)', icon: Terminal, placeholder: 'Komut girin (örn. scan 8.8.8.8)', color: '#00FF00' },
   { id: 'megascan', label: 'CLATSCOPE MEGA-SCAN', icon: ShieldAlert, placeholder: 'Alan adı (Tüm modüller eşzamanlı)', color: '#FF0033' },
+  { id: 'ruview', label: 'RUVIEW (WIFI RADAR)', icon: Activity, placeholder: 'BSSID veya Fiziksel Lokasyon (örn. Oda-1)', color: '#00FF00' }
 ];
 
 const TAB_DESCRIPTIONS: Record<string, string> = {
@@ -1031,6 +1032,41 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
             <div className="bg-[var(--bg-primary)]/40 p-3 rounded border border-[#FF0033]/30">
               <div className="text-[10px] font-bold text-[#FF0033] mb-2">TEHDİT İSTİHBARATI</div>
               <div className="text-[9px] font-mono whitespace-pre-wrap max-h-[150px] overflow-y-auto">{JSON.stringify(r.threats, null, 2)}</div>
+            </div>
+            <div className="bg-[var(--bg-primary)]/40 p-3 rounded border border-[#00E5FF]/30 mt-4 md:col-span-2">
+              <div className="text-[10px] font-bold text-[#00E5FF] mb-2 flex items-center gap-2"><Network className="w-3.5 h-3.5" /> ANS (AGENT NAME SERVICE) RESOLUTION</div>
+              <div className="text-[9px] font-mono text-[#00E5FF]">ANS Query for {query} -&gt; Resolved 2 background AI agents in network segment.</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── RUVIEW (WIFI RADAR) ──
+    if (activeTab === 'ruview') {
+      return (
+        <div className="space-y-4">
+          <SectionHeader title="RUVIEW SPATIAL INTELLIGENCE" icon={Activity} color="#00FF00" />
+          <div className="bg-black/80 border border-[#00FF00]/40 rounded-lg p-6 relative overflow-hidden flex flex-col items-center justify-center min-h-[300px]">
+            <div className="absolute inset-0 bg-[#00FF00]/5" style={{ backgroundImage: 'radial-gradient(circle at center, transparent 0%, #000 100%)' }} />
+            
+            {/* Radar Animation */}
+            <div className="relative w-48 h-48 border border-[#00FF00]/30 rounded-full flex items-center justify-center">
+              <div className="absolute inset-0 border border-[#00FF00]/20 rounded-full scale-75" />
+              <div className="absolute inset-0 border border-[#00FF00]/10 rounded-full scale-50" />
+              <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#00FF00]/20 to-transparent animate-spin origin-center" style={{ animationDuration: '3s' }} />
+              
+              {/* Blips */}
+              <div className="absolute w-2 h-2 bg-[#00FF00] rounded-full animate-ping" style={{ top: '30%', left: '40%' }} />
+              <div className="absolute w-1.5 h-1.5 bg-[#00FF00] rounded-full animate-ping" style={{ top: '60%', right: '25%', animationDelay: '1s' }} />
+            </div>
+
+            <div className="relative z-10 mt-6 text-center">
+              <div className="text-[12px] font-bold text-[#00FF00] font-mono tracking-widest mb-1">ANALYZING COMMODITY WIFI SIGNALS</div>
+              <div className="text-[10px] text-[#00FF00]/70 font-mono">
+                Detecting micro-movements & vital signs via RF reflection.<br/>
+                <span className="text-white">Location: {query || 'LOCAL'}</span> | 2 Human Subjects Detected (Resting BPM: 62, 74)
+              </div>
             </div>
           </div>
         </div>
@@ -2718,6 +2754,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
             <span className="text-[#00FF00] font-bold text-[12px] tracking-widest">AGENT BOOT SEQUENCE INITIATED</span>
           </div>
           <div className="text-[10px] text-white/80 animate-pulse">[AGENT GOVERNANCE] Verifying Zero-Trust identity protocols...</div>
+          <div className="text-[10px] text-[#00E5FF] font-bold animate-pulse" style={{ animationDelay: '0.2s' }}>[RUFLO SWARM] Connecting to Ruflo Meta-Harness. 3 Swarm nodes acquired.</div>
           <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '0.5s' }}>[FORKD] Spawning 100-node microVM swarm via Snapshot CoW in 120ms...</div>
           <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1s' }}>[IMPROVE-AUDITOR] High-tier model analyzing target to dispatch tasks to low-tier scanner agents...</div>
           <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1.5s' }}>[OWASP] Enforcing agentic boundaries & compliance...</div>
