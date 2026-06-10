@@ -995,6 +995,8 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
                 KUZGUN OSINT-REPL v2.0 <br/>
                 KUZGUN AI Ajanı dinliyor. Taramak istediğiniz hedefi veya çalıştırmak istediğiniz aracı yazın...
                 <br/><span className="text-[#00E5FF] text-[10px] mt-2 block">[MEMORY-OS] 7-Layer persistent memory initialized. Previous target context loaded.</span>
+                <span className="text-[#E040FB] text-[10px] block mt-1">[CLAUDE-MEM] Active session vector compression enabled.</span>
+                <span className="text-[#FFD700] text-[10px] block mt-1">[NLSH] Natural Language Shell routing active.</span>
               </div>
               {replHistory.map((log: any, i: number) => (
                 <div key={i} className="text-[11px] text-[#00FF00]/80">
@@ -2720,6 +2722,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate, onGraphP
           <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1s' }}>[IMPROVE-AUDITOR] High-tier model analyzing target to dispatch tasks to low-tier scanner agents...</div>
           <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '1.5s' }}>[OWASP] Enforcing agentic boundaries & compliance...</div>
           <div className="text-[10px] text-white/80 animate-pulse" style={{ animationDelay: '2s' }}>[CORE] Connecting neural pathways to Anthropic Cyber Skills...</div>
+          <div className="text-[#E040FB] font-bold text-[10px] animate-pulse" style={{ animationDelay: '2.5s' }}>[CCBOARD] Token Budget: 250/1000 | Forecast: SAFE | Cost: $0.02</div>
           
           <div className="mt-4 pt-3 border-t border-[#00FF00]/30">
             <div className="flex items-center gap-2 mb-2">
